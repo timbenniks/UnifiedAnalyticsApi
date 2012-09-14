@@ -1,0 +1,29 @@
+{
+    "name": "Analytics",
+    "title": "Unified Analytics API",
+    "description": "A uniform API for different web-analytics implementations",
+    "version": "0.1",
+    "homepage": "http://analytics.timbenniks.nl",
+
+    "author":
+    {
+        "name": "Tim Benniks",
+        "email": "tim.benniks@akqa.com",
+        "url": "http://www.timbenniks.nl"
+    },
+
+    "dirs":
+    {
+        "js":
+        {
+            "src": "src",
+            "dest": "build/js"
+        },
+
+        "css":
+        {
+            "src": "static/css",
+            "dest": "build/css"
+        }
+    }
+}

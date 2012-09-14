@@ -1,0 +1,290 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Unified analytics in JavaScript</title>
+	<script src="/libs/Modernizr.js"></script>
+    <link href="/static/css/style.css" rel="stylesheet" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=1,minimum-scale=1,maximum-scale=1" />
+
+</head>
+<body>
+
+<nav>
+    <a href="#setup">Setup</a>
+    <a href="#how_to_use">How to use</a>
+    <a href="#mapper">The mapper</a>
+    <a href="#dependencies">Dependencies</a>
+    <a href="#extending">Extending</a>
+</nav>
+
+<article>
+    <h1>Unified analytics in JavaScript</h1>
+
+    <p>
+        This piece of JavaScript provides a unified API for popular analytics libraries
+        like <a href="http://www.google.com/analytics/" title="Google Analytics">Google Analytics</a>,
+        <a href="http://www.omniture.com/en/" title="Adobe Omniture">Adobe Omniture</a> and
+        <a href="http://www.google.com/doubleclick/" title="Floodlight">Floodlight</a>.
+        If you have to implement something else than the above mentioned libraries you can <a href="#extending" title="Extending">easily do that</a>.
+    </p>
+    <p>
+        Analytics implementations can be different every time. This API let's you add your own <a href="#mapper">mapper</a> function to map to specific third party library data.
+        So for Omniture you could map <code>category</code> to <code>prop1</code> and <code>play</code> to <code>event2</code>. Read more about the mapper function <a href="#mapper">here</a>.
+    </p>
+
+    <h2 id="setup">Setup</h2>
+    <figure><pre><code data-language="javascript">var analyticsInstance = new Analytics.Base(settings);</code></pre></figure>
+
+    <p>
+        According to the keys in the settings object the script will instanciate the classes these keys represent.
+    </p>
+
+    <figure>
+<pre><code data-language="javascript">var settings =
+{
+    GoogleAnalytics:
+    {
+        key: 'google-key-28364',
+        mapper: function(func, data) {}
+    },
+
+    Omniture:
+    {
+        codeLocation: '/libs/s_code.js',
+        mapper: function(func, data) {}
+    }
+}
+</code></pre>
+    <figcaption>The <code>mapper</code> property is mandatory and <code>func</code> and <code>data</code> are supplied by the <code>mapTrackingData</code> function that all third party analytics classes have to implement.</figcaption>
+    </figure>
+
+    <h2 id="how_to_use">How to use</h2>
+    <p>This API has two functions which are callable by triggering an event on the <code>window</code>.</p>
+    <figure>
+<pre><code data-language="javascript">// The trackEvent function
+$(window).trigger(
+{
+    type: 'trackEvent',
+    trackingData: {}
+});
+
+// The trackPage function
+$(window).trigger(
+{
+    type: 'trackPage',
+    trackingData: {}
+});</code></pre>
+    <figcaption>The <code>type</code> property represents the function to call inside the third party analytics implementations.</figcaption>
+    </figure>
+
+    <h2 id="mapper">The mapper</h2>
+    <p>Let's say your data structure for an event call looks like this:</p>
+
+    <figure>
+<pre><code data-language="javascript">var trackingData =
+{
+    type: 'video',
+    action: 'play',
+    filename: 'Bugsbunny.mp4'
+}
+</code></pre>
+    </figure>
+
+
+
+    <p>For Omniture your mapper could look like this:</p>
+
+    <figure>
+<pre><code data-language="javascript">mapper: function(func, data)
+{
+    van mappedData = {};
+
+    // func can be: trackPage or trackEvent
+    if(func === 'trackEvent')
+    {
+        mappedData.prop1 = data.type;
+        mappedData.eVar1 = data.action;
+        mappedData.prop2 = data.filename;
+    }
+
+    return mappedData;
+}
+</code></pre>
+    </figure>
+
+    <p>And for Google Analytics your mapper could look like this:</p>
+
+    <figure>
+<pre><code data-language="javascript">mapper: function(func, data)
+{
+    van mappedData = {};
+
+    // func can be: trackPage or trackEvent
+    if(func === 'trackEvent')
+    {
+        mappedData.category = data.type;
+        mappedData.action = data.action;
+        mappedData.label = data.filename;
+    }
+
+    return mappedData;
+}
+</code></pre>
+    </figure>
+
+    <h2 id="dependencies">Dependencies</h2>
+    <p>This library is dependend on <a href="http://jquery.com">jQuery</a> and <a href="http://modernizr.com">Modernizr</a>.</p>
+
+    <h2 id="extending">Extending</h2>
+
+    <p>
+        The classes need to implement three functions: <code>trackPage</code>, <code>trackEvent</code> and <code>mapTrackingData</code>.
+        Each class listens on the <code>window</code> for events to fire the tracking functions.
+        To find out how to trigger these events read <a href="#how_to_use">this</a>.
+    </p>
+    <p>
+        For Google Analytics the <code>trackPage</code> function does this: <code>_gaq.push(['_trackPageview', trackingData.url]);</code>
+    </p>
+
+    <p>All functions found in this skeleton class are mandatory.</p>
+<pre><code data-language="javascript">/*global Modernizr:true, jQuery:true, Analytics:true */
+
+(function($, Analytics, Modernizr)
+{
+    "use strict";
+
+    Analytics.YOUR_SPECIFIC_ANALYTICS_LIBRARY = function(options)
+    {
+        var init = function()
+        {
+            // load the specific analytics implementation code
+
+            $(window)
+                .on('trackPage', trackPage)
+                .on('trackEvent', trackEvent);
+        },
+
+        trackPage = function(e)
+        {
+            var trackingData = mapTrackingData('trackPage', e.trackingData);
+
+            // call the YOUR_SPECIFIC_ANALYTICS_LIBRARY implementation code here
+        },
+
+        trackEvent = function(e)
+        {
+            var trackingData = mapTrackingData('trackEvent', e.trackingData);
+
+            // call the YOUR_SPECIFIC_ANALYTICS_LIBRARY implementation code here
+        },
+
+        mapTrackingData = function(func, trackingData)
+        {
+            if(options.mapper && typeof options.mapper === 'function')
+            {
+                return options.mapper(func, trackingData);
+            }
+            else
+            {
+                throw('No mapper function found for YOUR_SPECIFIC_ANALYTICS_LIBRARY.');
+            }
+        };
+
+        init();
+    };
+
+}(jQuery, window.Analytics = window.Analytics || {}, Modernizr));
+</code></pre>
+</article>
+
+<script src="/libs/jquery-1.8.0.min.js"></script>
+<script src="/src/Analytics.Base.js"></script>
+<script src="/src/Analytics.Omniture.js"></script>
+<script src="/src/Analytics.GoogleAnalytics.js"></script>
+
+<script src="/libs/rainbow.min.js"></script>
+
+<script>
+    $(function()
+    {
+        var AnalyticsInstance = new Analytics.Base(
+        {
+            GoogleAnalytics:
+            {
+                key: 'google-key-28364',
+
+                mapper: function(func, data)
+                {
+                    var newData = {};
+
+                    switch(func)
+                    {
+                        case 'trackPage': return newData; break;
+
+                        case 'trackEvent':
+
+                            newData.category = data.locale + '/' + data.category;
+                            newData.action = data.action;
+                            newData.label = data.linkName + '/' + data.label;
+
+                            return newData;
+
+                        break;
+                    }
+                }
+            },
+
+            Omniture:
+            {
+                codeLocation: '/libs/s_code.js',
+
+                mapper: function(func, data)
+                {
+                    var newData = {};
+
+                    switch(func)
+                    {
+                        case 'trackPage': return newData; break;
+
+                        case 'trackEvent':
+
+                            newData.prop1 = data.locale;
+                            newData.prop2 = data.category;
+                            newData.eVar1 = data.action;
+                            newData.linkName = data.linkName;
+                            newData.element = data.element;
+
+                            return newData;
+
+                        break;
+                    }
+                }
+            }
+        });
+
+        $('button').on('click', function()
+        {
+            var el = this,
+                action = $(el).text();
+
+            $(window).trigger(
+            {
+                type: 'trackEvent',
+                trackingData:
+                {
+                    locale: 'en-gb',
+                    element: el,
+                    linkName: action,
+                    category: 'video',
+                    action: 'play',
+                    label: 'Bugsbunny.mp4'
+                }
+            });
+        });
+    });
+</script>
+
+</body>
+</html>
