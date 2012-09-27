@@ -11,6 +11,10 @@
 {
     "use strict";
 
+	/*
+	*	Analytics.Omniture
+	*	@constructor
+	*/
     Analytics.Omniture = function(options)
 	{
 		var codeLocation = options.codeLocation,
@@ -46,25 +50,36 @@
 				.on('trackEvent', trackEvent);
 		},
 
-		trackPage = function(e)
+		/*
+		*	Transforms the trackingData and fires the s.t() function.
+		*	@param {object} event Contains the trackingData send by the function call.
+		*/
+		trackPage = function(event)
 		{
-			var trackingData = mapTrackingData('trackPage', e.trackingData);
+			var trackingData = mapTrackingData('trackPage', event.trackingData);
 
 			buildUpOmnitureObject(trackingData);
 
 			s.t(s);
 		},
-		
-		trackEvent = function(e)
+
+		/*
+		*	Transforms the trackingData and fires the s.tl() function.
+		*	@param {object} event Contains the trackingData send by the function call.
+		*/
+		trackEvent = function(event)
 		{
-			var trackingData = mapTrackingData('trackEvent', e.trackingData);
+			var trackingData = mapTrackingData('trackEvent', event.trackingData);
 
 			buildUpOmnitureObject(trackingData);
 
 			s.tl(trackingData.element, trackingData.type || 'o', trackingData.linkName);
 		},
 		
-		cleanOmnitureData = function ()
+		/*
+		*	Cleans the {s} object.
+		*/
+		cleanOmnitureData = function()
 		{
 			for(var i = 0; i < 50; i++)
 			{
@@ -79,6 +94,10 @@
 			s.linkTrackEvents = 'None';
 		},
 
+		/*
+		*	Builds up the {s} object from the tracking data it receives.
+		*	@param {object} trackingData Contains the generic trackingData.
+		*/
 		buildUpOmnitureObject = function(trackingData)
 		{
 			var propsEvarsConcatinated = '',
@@ -88,7 +107,7 @@
 
 			if(trackingData.props)
 			{
-				$.each(trackingData.props, function(key, val) 
+				$.each(trackingData.props, function(key, val)
 				{
 					propsEvarsConcatinated += ',' + key;
 					s[key] = val;
@@ -99,7 +118,7 @@
 			
 			if(trackingData.evars)
 			{
-				$.each(trackingData.evars, function(key, val) 
+				$.each(trackingData.evars, function(key, val)
 				{
 					propsEvarsConcatinated += ',' + key;
 					s[key] = val;
@@ -110,7 +129,7 @@
 			
 			if(trackingData.events)
 			{
-				$.each(trackingData.events, function(key, val) 
+				$.each(trackingData.events, function(key, val)
 				{
 					eventsConcatinated += key + ',';
 					s[key] = val;
@@ -129,6 +148,12 @@
 			}
 		},
 
+		/*
+		*	Builds up the {s} object from the tracking data it receives.
+		*	@param {string} func The name of the used function (trackPage or trackEvent).
+		*	@param {object} trackingData Contains the original trackingData.
+		*	@return {function} Returns the mapper as a function call.
+		*/
 		mapTrackingData = function(func, trackingData)
 		{
 			if(options.mapper && typeof options.mapper === 'function')

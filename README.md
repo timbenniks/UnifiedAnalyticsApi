@@ -2,18 +2,18 @@ Unified analytics in JavaScript
 ===============================
 
 This piece of JavaScript provides a unified API for popular analytics
-libraries like [Google
-Analytics](http://www.google.com/analytics/ "Google Analytics"), [Adobe
-Omniture](http://www.omniture.com/en/ "Adobe Omniture") and
-[Floodlight](http://www.google.com/doubleclick/ "Floodlight"). If you
-have to implement something else than the above mentioned libraries you
-can [easily do that](#extending "Extending").
+libraries like [Google Analytics](http://www.google.com/analytics/ "Google Analytics") 
+or [Adobe Omniture](http://www.omniture.com/en/ "Adobe Omniture").
 
-Analytics implementations can be different every time. This API let's
-you add your own [mapper](#mapper) function to map to specific third
+The aim is to provide a clean and simple approach to handle the metrics of your website.
+There is a base class that provides two functions `trackPage` and `trackEvent`.
+
+Analytics implementations can be different every time so this API let's
+you add your own mapper function to map to specific third
 party library data. So for Omniture you could map `category` to `prop1`
-and `play` to `event2`. Read more about the mapper function
-[here](#mapper).
+and `play` to `event2`. 
+
+
 
 Setup
 -----

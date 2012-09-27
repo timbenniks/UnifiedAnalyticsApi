@@ -1,4 +1,4 @@
-/* 
+/*
 *	@Class:			Analytics.Base
 *	@Description:	Analytics wrapper around Omiture, Google Analytics and Floodlight
 *	@Author:		Tim Benniks <tim.benniks@akqa.com>
@@ -11,9 +11,13 @@
 {
 	"use strict";
 
-    Analytics.Base = function(options)
+	/*
+	*	Analytics.Base
+	*	@constructor
+	*/
+	Analytics.Base = function(options)
 	{
-		var init = function() 
+		var init = function()
 		{
             $.each(options, function(key, value)
 			{
@@ -21,6 +25,11 @@
 			});
 		},
 
+		/*
+		*	Checks if classToLoad exists as a function and returns a new instance of it.
+		*	@param {string} classToLoad The name of the class to load and initialize.
+		*	@return {function} The instance of the class.
+		*/
 		checkAndInit = function(classToLoad)
 		{
 			if($.isFunction(Analytics[classToLoad]))

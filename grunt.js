@@ -41,6 +41,13 @@ module.exports = function(grunt)
                 src: ['<banner:meta.banner>', '<config:concat.js.dest>'],
                 dest: '<%= pkg.dirs.js.dest %>/<%= pkg.name %>-<%= pkg.version %>.min.js'
             }
+        },
+
+        uglify:
+        {
+            mangle: {toplevel: true},
+            squeeze: {dead_code: false},
+            codegen: {quote_keys: true}
         }
     });
 

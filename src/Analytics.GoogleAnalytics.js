@@ -1,4 +1,4 @@
-/* 
+/*
 *	@Class:			Analytics.GoogleAnalytics
 *	@Description:	GoogleAnalytics implementation for Analytics wrapper
 *	@Author:		Tim Benniks <tim.benniks@akqa.com>
@@ -13,6 +13,10 @@
 {
     "use strict";
 
+	/*
+	*	Analytics.GoogleAnalytics
+	*	@constructor
+	*/
     Analytics.GoogleAnalytics = function(options)
 	{
 		var init = function()
@@ -35,19 +39,33 @@
 				.on('trackPage', trackPage)
 				.on('trackEvent', trackEvent);
 		},
-
-        trackPage = function(e)
+		
+		/*
+		*	Gets the trackingData and pushes it into _gaq.
+		*	@param {object} event Contains the trackingData send by the function call.
+		*/
+        trackPage = function(event)
 		{
-			var trackingData = mapTrackingData('trackPage', e.trackingData);
+			var trackingData = mapTrackingData('trackPage', event.trackingData);
 			window._gaq.push(['_trackPageview', trackingData.url]);
 		},
-		
+
+		/*
+		*	Gets the trackingData and pushes it into _gaq.
+		*	@param {object} event Contains the trackingData send by the function call.
+		*/
 		trackEvent = function(e)
 		{
 			var trackingData = mapTrackingData('trackEvent', e.trackingData);
 			window._gaq.push(['_trackEvent', trackingData.category, trackingData.action, trackingData.opt_label, trackingData.opt_value, trackingData.opt_noninteraction]);
 		},
 
+		/*
+		*	Builds up the {s} object from the tracking data it receives.
+		*	@param {string} func The name of the used function (trackPage or trackEvent).
+		*	@param {object} trackingData Contains the original trackingData.
+		*	@return {function} Returns the mapper as a function call.
+		*/
 		mapTrackingData = function(func, trackingData)
 		{
 			if(options.mapper && typeof options.mapper === 'function')
