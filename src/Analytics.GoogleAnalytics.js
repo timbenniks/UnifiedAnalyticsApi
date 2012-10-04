@@ -23,7 +23,7 @@
 		{
 			if(typeof window._gaq === 'undefined')
 			{
-				window._gaq = ['_setAccount', options.key];
+				window._gaq = [['_setAccount', options.key]];
 			}
 
             if(Modernizr && typeof Modernizr.load === 'function')
