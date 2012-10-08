@@ -9,36 +9,36 @@
 /*global Modernizr:true, jQuery:true, Analytics:true, s:true */
 (function($, Analytics, Modernizr)
 {
-    "use strict";
+	"use strict";
 
 	/*
 	*	Analytics.Omniture
 	*	@constructor
 	*/
-    Analytics.Omniture = function(options)
+	Analytics.Omniture = function(options)
 	{
 		var codeLocation = options.codeLocation,
-            s,
+		s,
 
 		init = function()
 		{
 			if(codeLocation)
 			{
 				if(Modernizr && typeof Modernizr.load === 'function')
-                {
-                    Modernizr.load([
-                    {
-                        load: codeLocation,
-                        complete: function()
-                        {
-                            s = window.s;
-                        }
-                    }]);
-                }
-                else
-                {
-                    throw('Modernizr does not exists or "Modernizr.load" has not been added to your Modernizr build.');
-                }
+				{
+					Modernizr.load([
+					{
+						load: codeLocation,
+						complete: function()
+						{
+							s = window.s;
+						}
+					}]);
+				}
+				else
+				{
+					throw('Modernizr does not exists or "Modernizr.load" has not been added to your Modernizr build.');
+				}
 			}
 			else
 			{

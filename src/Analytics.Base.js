@@ -19,7 +19,7 @@
 	{
 		var init = function()
 		{
-            $.each(options, function(key, value)
+			$.each(options, function(key, value)
 			{
 				checkAndInit(key, value.file);
 			});

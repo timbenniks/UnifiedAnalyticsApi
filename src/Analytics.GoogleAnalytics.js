@@ -11,13 +11,13 @@
 /*global Modernizr:true, jQuery:true, Analytics:true */
 (function($, Analytics, Modernizr)
 {
-    "use strict";
+	"use strict";
 
 	/*
 	*	Analytics.GoogleAnalytics
 	*	@constructor
 	*/
-    Analytics.GoogleAnalytics = function(options)
+	Analytics.GoogleAnalytics = function(options)
 	{
 		var init = function()
 		{
@@ -26,14 +26,14 @@
 				window._gaq = [['_setAccount', options.key]];
 			}
 
-            if(Modernizr && typeof Modernizr.load === 'function')
-            {
-                Modernizr.load('//www.google-analytics.com/ga.js');
-            }
-            else
-            {
-                throw('Modernizr does not exists or "Modernizr.load" has not been added to your Modernizr build.');
-            }
+			if(Modernizr && typeof Modernizr.load === 'function')
+			{
+				Modernizr.load('//www.google-analytics.com/ga.js');
+			}
+			else
+			{
+				throw('Modernizr does not exists or "Modernizr.load" has not been added to your Modernizr build.');
+			}
 
 			$(window)
 				.on('trackPage', trackPage)
@@ -44,7 +44,7 @@
 		*	Gets the trackingData and pushes it into _gaq.
 		*	@param {object} event Contains the trackingData send by the function call.
 		*/
-        trackPage = function(event)
+		trackPage = function(event)
 		{
 			var trackingData = mapTrackingData('trackPage', event.trackingData);
 			window._gaq.push(['_trackPageview', trackingData.url]);
