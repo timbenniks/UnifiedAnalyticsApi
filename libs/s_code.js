@@ -1,14 +1,11 @@
-// http://localhost/static/flash/OmnitureSWF.swf?eventsMap=http://localhost/static/flash/my-events-map.xml
-
-var s_account='pvhtommydev',
+var s_account='<s_account_name>',
 	s = s_gi(s_account);
 
-s.trackingServer =			'metrics.tommy.com';
-s.linkInternalFilters =		'javascript:,.tommy.com,atgnow.com,localhost,thcampaigns.com';
-
+s.trackingServer =			'<tracking_server>';
+s.linkInternalFilters =		'';
 s.charSet =					'UTF-8';
 
-s.siteID =					'GlobalTommy';
+s.siteID =					'<site_id>';
 s.defaultPage =				'';			// filename to add when none exists
 s.queryVarsList =			'';			// query parameters to keep
 s.pathExcludeDelim =		';';		// portion of the path to exclude
@@ -27,7 +24,7 @@ s.linkTrackEvents =			'None';
 s.currencyCode =			'USD';
 s.usePlugins =				false;
 
-function s_doPlugins(s) 
+function s_doPlugins(s)
 {
 	s.server = window.location.hostname;
   
